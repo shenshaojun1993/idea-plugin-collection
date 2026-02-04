@@ -1,0 +1,54 @@
+<idea-plugin>
+    <id>com.ssj.copypath</id>
+    <name>Copy Path with Line Number</name>
+    <vendor>SSJ</vendor>
+    <description><![CDATA[
+        快速复制当前文件路径和选中行号到剪贴板。<br/>
+        支持多种格式：完整路径、相对路径、带行号、不带行号。<br/><br/>
+        <b>功能：</b>
+        <ul>
+            <li>复制完整路径和行号</li>
+            <li>复制仅文件路径</li>
+            <li>复制相对路径和行号</li>
+            <li>复制仅相对路径</li>
+        </ul>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <actions>
+        <!-- 子菜单组 -->
+        <group id="CopyPathActionGroup"
+               text="复制路径..."
+               description="复制文件路径到剪贴板"
+               popup="true"
+               icon="AllIcons.Actions.Copy">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReference"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="CopyReference"/>
+
+            <action id="CopyFullPathWithLine"
+                    class="com.ssj.copypath.actions.CopyFullPathWithLineAction"
+                    text="复制完整路径和行号"
+                    description="复制完整路径，格式：C:/path/file.ts:L5-L10">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift C"/>
+            </action>
+
+            <action id="CopyFullPathOnly"
+                    class="com.ssj.copypath.actions.CopyFullPathOnlyAction"
+                    text="复制仅文件路径"
+                    description="仅复制文件的完整路径"/>
+
+            <separator/>
+
+            <action id="CopyRelativePathWithLine"
+                    class="com.ssj.copypath.actions.CopyRelativePathWithLineAction"
+                    text="复制相对路径和行号"
+                    description="复制相对路径，格式：src/file.ts:L5-L10"/>
+
+            <action id="CopyRelativePathOnly"
+                    class="com.ssj.copypath.actions.CopyRelativePathOnlyAction"
+                    text="复制仅相对路径"
+                    description="仅复制文件的相对路径"/>
+        </group>
+    </actions>
+</idea-plugin>
