@@ -1,0 +1,40 @@
+name: Publish Plugin to Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 允许上传文件到 Release
+
+    steps:
+      # 1. 检出代码
+      - uses: actions/checkout@v4
+
+      # 2. 设置 Java 环境 (IntelliJ 插件开发通常需要 JDK 17)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 3. 赋予 gradlew 执行权限 (防止 Linux 下报错 Permission denied)
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 4. 执行构建 (生成插件包)
+      - name: Build with Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          arguments: buildPlugin
+
+      # 5. 上传构建产物 (.zip) 到你的 Release
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          # 自动匹配 build/distributions 下的所有 zip 文件
+          files: build/distributions/*.zip
